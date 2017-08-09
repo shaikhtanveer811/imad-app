@@ -20,7 +20,7 @@ button.onclick = function () {
     };
     
     // Make the request
-    request.open('GET', 'http://shaikhtanveer811.imad.hasura-app.io/submit-name?name=' + name, true);
+    request.open('GET', 'http://shaikhtanveer811.imad.hasura-app.io/counter', true);
     request.send(null);
 };
 
