@@ -8,48 +8,11 @@ var config = {
     database: 'shaikhtanveer811',
     host: 'db_imad.hasura-app.io',
     port: '5432',
-    password: process.env.db-shaikhtanveer811-29187
+    password: process.env.DB_PASSWORD
 };
 
 var app = express();
 app.use(morgan('combined'));
-
-
-var articles = {
-'article-one': {
-    title:'Article One I Muhammad Tanveer',
-    heading: 'Article One',
-    date: 'Sep 5, 2016',
-    content: `
-            <p>
-                This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.
-            </p>
-            <p>
-                This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.
-            </p>
-            <p>
-                This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.This is the content for my first article.
-            </p>`
-},
-'article-two': {
-    title:'Article Two I Muhammad Tanveer',
-    heading: 'Article Two',
-    date: 'Sep 10, 2016',
-    content: `
-            <p>
-                This is the content for my second article.
-            </p>`
-},
-'article-three': {
-    title:'Article Three I Muhammad Tanveer',
-    heading: 'Article Three',
-    date: 'Sep 15, 2016',
-    content: `
-            <p>
-                This is the content for my third article.
-            </p>`
-},
-};
 
 function createTemplate (data) {
 var title = data.title;
@@ -92,6 +55,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
+var pool = new Pool(config);
 app.get('/test-db', function (req, res) {
    pool.query('SELECT * FROM test', function (err, result) {
       if (err) {
@@ -119,7 +83,7 @@ app.get('/submit-name', function(req, res) { // URL: /submit-nae?name=xxxxx
 });
 
 app.get('/articles/:articleName', function (req, res) {
-    pool.query("SELECT * FROM article WHERE title = '" + req.params.articleName + "'", function (err, result) {
+    pool.query("SELECT * FROM article WHERE title = $1",[req.params.articleName], function (err, result) {
         if (err) {
             res.status(500).send(err.toString());
         } else {
