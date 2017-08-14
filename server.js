@@ -57,6 +57,8 @@ app.get('/', function (req, res) {
 
 var pool = new Pool(config);
 app.get('/test-db', function (req, res) {
+    // Make a select request
+    // Return a response with the results
    pool.query('SELECT * FROM test', function (err, result) {
       if (err) {
           res.status(500).send(err.toString());
@@ -83,6 +85,10 @@ app.get('/submit-name', function(req, res) { // URL: /submit-nae?name=xxxxx
 });
 
 app.get('/articles/:articleName', function (req, res) {
+    // articleName === article-one
+    // articles[articleName] == {} content object for article one
+    
+    // SELECT * FROM article WHERE title = '\'; DELETE WHERE a = \'asdf'
     pool.query("SELECT * FROM article WHERE title = $1",[req.params.articleName], function (err, result) {
         if (err) {
             res.status(500).send(err.toString());
